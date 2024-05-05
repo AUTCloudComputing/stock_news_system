@@ -44,10 +44,16 @@ app = Flask(__name__)
 data_fetcher = EODHDAPIsDataFetcher(API_TOKEN)
 
 
+# @app.route("/")
+# def exchanges():
+#     exchanges = data_fetcher.fetch_exchanges()
+#     return render_template("exchanges.html", exchanges=exchanges)
+
+
 @app.route("/")
 def exchanges():
-    exchanges = data_fetcher.fetch_exchanges()
-    return render_template("exchanges.html", exchanges=exchanges)
+    exchanges = data_fetcher.fetch_news()
+    return render_template("news.html", exchanges=exchanges)
 
 
 @app.route("/exchange/<code>")
@@ -64,3 +70,4 @@ def exchange_market_data(code, market, granularity):
 
 if __name__ == "__main__":
     app.run(host=http_host, port=http_port, debug=args.debug)
+    # app.run(debug=True)

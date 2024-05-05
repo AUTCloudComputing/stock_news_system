@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <!-- import CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/display.css">
+    <!-- import JavaScript -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S&P 500 News</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+            crossorigin="anonymous"></script>
+
+    <!-- CSS for DataTables and Buttons -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
+
+    <!-- JS for DataTables and its extensions -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            $('#exchangesTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            });
+        });
+    </script>
+
+
+</head>
+
+<body>
+
+<div class="container" id="app">
+    <h1>S&P 500 News</h1>
+    {#    <div id="app" slot="footer" class="dialog-footer">#}
+    <template>
+        <br/>
+        <div class="block">
+            <span class="demonstration">&nbsp; &nbsp; dates &nbsp; &nbsp; </span>
+            <el-date-picker
+                    v-model="value2"
+                    type="daterange"
+                    align="right"
+                    unlink-panels
+                    range-separator="to"
+                    start-placeholder="Start date"
+                    end-placeholder="End date"
+                    value-format="yyyy-MM-dd"
+                    format="yyyy-MM-dd"
+                    :picker-options="pickerOptions">
+            </el-date-picker>
+            &nbsp; &nbsp;
+            <el-button type="primary" @click="handleAdd()">confirm</el-button>
+        </div>
+        <br/>
+    </template>
+    {#            </div>#}
+    <table id="exchangesTable" class="table table-sm table-light table-bordered table-hover table-striped">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Link</th>
+            <th>Date</th>
+            <th>Content</th>
+            <th>Symbols</th>
+            <th>Tags</th>
+            <th>Sentiment</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for exchange in exchanges %}
+            <tr>
+                <td>{{ exchange.title }}</td>
+                <td>{{ exchange.link }}</td>
+                <td>{{ exchange.date }}</td>
+                <td>{{ exchange.content }}</td>
+                <td>{{ exchange.symbols }}</td>
+                <td>{{ exchange.tags }}</td>
+                <td>{{ exchange.sentiment }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+
+
+<script type="text/javascript">
+    var Main = {
+        data() {
+            return {
+                pickerOptions: {
+                    shortcuts: [
+                        {
+                            text: '最近三个月',
+                            onClick(picker) {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30 * 3);
+                                picker.$emit('pick', [start, end]);
+                            }
+                        }, {
+                            text: '最近半年',
+                            onClick(picker) {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30 * 6);
+                                picker.$emit('pick', [start, end]);
+                            }
+                        },
+
+                        {
+                            text: '最近9个月',
+                            onClick(picker) {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30 * 9);
+                                picker.$emit('pick', [start, end]);
+                            }
+                        },
+                        {
+                            text: '最近一年',
+                            onClick(picker) {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30 * 12);
+                                picker.$emit('pick', [start, end]);
+                            }
+                        },
+
+                    ]
+                },
+                value2: '',
+            };
+        },
+        methods: {
+            handleAdd() {
+                console.log(this.value2[0]);
+                console.log(this.value2[1]);
+                //构造请求参数
+                let start0 = this.value2[0];
+                let end0 = this.value2[1];
+                extracted(start0, end0);
+            },
+        }
+    };
+
+    var Ctor = Vue.extend(Main);
+    new Ctor().$mount('#app');
+
+    function extracted(start, end) {
+    }
+
+    extracted(null, null);
+
+
+</script>
+</html>
