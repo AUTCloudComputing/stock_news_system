@@ -18,8 +18,14 @@ Create a config.py file in the project root containing your EODHD APIs token.
 
 
 
-    API_TOKEN = "YOUR_TOKEN"
 
+ ```Java
+    API_TOKEN = "YOUR_TOKEN"
+    OPENAI_KEY = "YOUR_TOKEN"
+ ```
+
+
+run this project:
 
 
  ```Java
