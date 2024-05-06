@@ -23,6 +23,12 @@ Create a config.py file in the project root containing your EODHD APIs token.
 
 
  ```Java
+ python -m venv .venv
+ . .venv/bin/activate
+ . .venv/bin/activate
+  pip install -r requirements.txt
+  import openai
+  
 python app.py --host 0.0.0.0 --port 5000 --debug                
 
  ```
